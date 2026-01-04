@@ -8,6 +8,8 @@ import (
 )
 
 func loadConfig() Config {
+	ensureEnvLoaded() // 👈 FAIL-SAFE
+
 	app := getEnv("APP_NAME", "app")
 
 	path := os.Getenv("LOG_FILE_PATH")
@@ -15,7 +17,9 @@ func loadConfig() Config {
 		path = "./" + app + "_" + time.Now().Format("20060102_150405") + ".log"
 	}
 
-	loc, err := time.LoadLocation("Asia/Kolkata")
+	timezone := getEnv("LOG_TIMEZONE", "Asia/Kolkata")
+
+	loc, err := time.LoadLocation(timezone)
 	if err != nil {
 		loc = time.Local
 	}
@@ -27,6 +31,7 @@ func loadConfig() Config {
 		Format:   split(getEnv("LOG_FORMAT", "AppName,Level,Timestamp,Message")),
 		TimeFmt:  getEnv("LOG_TIME_FORMAT", "02-Jan-2006 15:04:05"),
 		Location: loc,
+		Color:    getEnvBool("LOG_COLOR", true),
 	}
 }
 
@@ -52,4 +57,15 @@ func split(s string) []string {
 		p[i] = strings.TrimSpace(p[i])
 	}
 	return p
+}
+
+func getEnvBool(k string, d bool) bool {
+	v := strings.ToLower(os.Getenv(k))
+	if v == "true" || v == "1" {
+		return true
+	}
+	if v == "false" || v == "0" {
+		return false
+	}
+	return d
 }

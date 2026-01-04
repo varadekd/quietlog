@@ -81,6 +81,7 @@ You do **not** need to call `Init()` explicitly — quietlog initializes itself 
 | `LOG_LINES` | `1000` | Max log lines before reset |
 | `LOG_FORMAT` | `AppName,Level,Timestamp,Message` | Log format order |
 | `LOG_TIME_FORMAT` | `02-Jan-2006 15:04:05` | Timestamp format |
+| `LOG_TIMEZONE` | `Asia/Kolkata` | Timezone format |
 
 > we have created and .env.template for you, you can simply copy and paste the items as per your choice.
 ---

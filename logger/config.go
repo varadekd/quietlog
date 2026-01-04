@@ -9,4 +9,5 @@ type Config struct {
 	Format   []string
 	TimeFmt  string
 	Location *time.Location
+	Color    bool
 }
