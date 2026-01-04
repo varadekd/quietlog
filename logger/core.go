@@ -3,6 +3,7 @@ package logger
 import (
 	"log"
 	"sync"
+	"sync/atomic"
 )
 
 type Level string
@@ -15,8 +16,9 @@ const (
 )
 
 var (
-	once    sync.Once
-	base    *log.Logger
-	lineCnt int64
-	cfg     Config
+	mu          sync.Mutex
+	initialized atomic.Bool
+	base        *log.Logger
+	cfg         Config
+	lineCnt     atomic.Int64
 )

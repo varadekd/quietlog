@@ -2,14 +2,15 @@ package logger
 
 import (
 	"fmt"
-	"sync/atomic"
 )
 
 func Log(level Level, msg string) {
-	Init()
+	if !initialized.Load() {
+		Init()
+	}
 
-	if atomic.AddInt64(&lineCnt, 1) > cfg.MaxLines {
-		atomic.StoreInt64(&lineCnt, 1)
+	if lineCnt.Add(1) > cfg.MaxLines {
+		lineCnt.Store(1)
 	}
 
 	base.Println(formatLine(level, msg))

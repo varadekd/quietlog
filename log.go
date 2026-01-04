@@ -1,8 +1,6 @@
 package quietlog
 
-import (
-	"github.com/varadekd/quietlog/logger"
-)
+import "github.com/varadekd/quietlog/logger"
 
 func Init() {
 	logger.Init()

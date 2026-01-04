@@ -15,15 +15,16 @@ func loadConfig() Config {
 		path = "./" + app + "_" + time.Now().Format("20060102_150405") + ".log"
 	}
 
-	format := getEnv("LOG_FORMAT", "AppName,Level,Timestamp,Message")
-
-	loc, _ := time.LoadLocation("Asia/Kolkata")
+	loc, err := time.LoadLocation("Asia/Kolkata")
+	if err != nil {
+		loc = time.Local
+	}
 
 	return Config{
 		AppName:  app,
 		FilePath: path,
 		MaxLines: int64(getEnvInt("LOG_LINES", 1000)),
-		Format:   split(format),
+		Format:   split(getEnv("LOG_FORMAT", "AppName,Level,Timestamp,Message")),
 		TimeFmt:  getEnv("LOG_TIME_FORMAT", "02-Jan-2006 15:04:05"),
 		Location: loc,
 	}
