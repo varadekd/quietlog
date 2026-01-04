@@ -1,0 +1,4 @@
+[app] [INFO] [04-Jan-2026 11:09:25] [info message] : info message
+[app] [DEBUG] [04-Jan-2026 11:09:25] [debug message] : debug message
+[app] [ERROR] [04-Jan-2026 11:09:25] [error message] : error message
+[app] [INFO] [04-Jan-2026 11:09:25] [hello from env test] : hello from env test

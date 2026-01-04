@@ -5,21 +5,27 @@ import (
 	"time"
 )
 
-func formatLine(lvl level, msg string) string {
-	now := time.Now().In(cfg.Location).Format(cfg.TimeFormat)
+func formatLine(level Level, msg string) string {
+	now := time.Now().In(cfg.Location).Format(cfg.TimeFmt)
 
-	parts := map[string]string{
+	fields := map[string]string{
 		"AppName":   cfg.AppName,
-		"Level":     string(lvl),
+		"Level":     string(level),
 		"Timestamp": now,
 		"Message":   msg,
 	}
 
-	var out []string
+	var b strings.Builder
 	for _, f := range cfg.Format {
-		if v, ok := parts[f]; ok {
-			out = append(out, "["+v+"]")
+		if v, ok := fields[f]; ok {
+			b.WriteString("[")
+			b.WriteString(v)
+			b.WriteString("] ")
 		}
 	}
-	return strings.Join(out, " ") + " : " + msg
+
+	b.WriteString(": ")
+	b.WriteString(msg)
+
+	return b.String()
 }
