@@ -5,15 +5,15 @@ import (
 	"testing"
 )
 
-func TestConcurrentLogging(t *testing.T) {
+func TestInternalConcurrentLogging(t *testing.T) {
 	Init()
 
 	var wg sync.WaitGroup
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 500; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			Log(InfoLevel, "concurrent log")
+			Log(InfoLevel, "internal log")
 		}()
 	}
 
