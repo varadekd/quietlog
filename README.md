@@ -144,13 +144,6 @@ It exists for a different class of problems.
 
 ---
 
-## Final note (important)
-
-This project aligns strongly with:
-- Your engineering style
-- Your preference for stable, long-term systems
-- Go’s philosophy
-
 ## License
 
 MIT
