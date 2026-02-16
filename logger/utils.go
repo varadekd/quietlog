@@ -42,7 +42,7 @@ func LoadConfig(filepath string) Config {
 		Timezone:   "",
 		MaxLines:   1000,
 		Format:     []string{"AppName", "Level", "Timestamp", "Message"},
-		TimeFmt:    "02-Jan-2006 15:04:05",
+		TimeFmt:    "02-Jan-2006 15:04:05 MST",
 		Color:      true,
 		DebugLevel: false,
 	}

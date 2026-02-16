@@ -32,9 +32,11 @@ func formatLine(level Level, msg string) string {
 				b.WriteString(": ")
 				b.WriteString(v)
 			} else {
-				b.WriteString("[")
-				b.WriteString(v)
-				b.WriteString("]")
+				if v != "" {
+					b.WriteString("[")
+					b.WriteString(v)
+					b.WriteString("]")
+				}
 			}
 		}
 	}
