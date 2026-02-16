@@ -9,6 +9,11 @@ func Log(level Level, msg string) {
 		Init()
 	}
 
+	// Terminating the debug logs
+	if level == DebugLevel && !cfg.DebugLevel {
+		return
+	}
+
 	if lineCnt.Add(1) > cfg.MaxLines {
 		lineCnt.Store(1)
 	}

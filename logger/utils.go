@@ -2,6 +2,7 @@ package logger
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"time"
 )
@@ -49,10 +50,10 @@ func LoadConfig(filepath string) Config {
 	// read file if present
 	b, err := os.ReadFile(path)
 	if err != nil {
-		Logf(WarnLevel, "logger config not found at %s — using defaults", path)
+		fmt.Printf("logger config not found at %s — using defaults", path)
 	} else {
 		if err := json.Unmarshal(b, &jc); err != nil {
-			Logf(WarnLevel, "logger config invalid JSON at %s — using defaults: %v", path, err)
+			fmt.Printf("logger config invalid JSON at %s — using defaults: %v", path, err)
 		}
 	}
 
@@ -64,7 +65,7 @@ func LoadConfig(filepath string) Config {
 	// timezone handling
 	loc, err := time.LoadLocation(jc.Timezone)
 	if err != nil {
-		Logf(WarnLevel, "invalid timezone %q — falling back to system local", jc.Timezone)
+		fmt.Printf("invalid timezone %q — falling back to system local", jc.Timezone)
 		loc = time.Local
 	}
 

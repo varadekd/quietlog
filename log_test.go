@@ -14,6 +14,7 @@ func TestConcurrentPublicLogging(t *testing.T) {
 		go func(i int) {
 			defer wg.Done()
 			Info("info log")
+			Warn("Warning log")
 			Debug("debug log")
 			Error("error log")
 		}(i)
