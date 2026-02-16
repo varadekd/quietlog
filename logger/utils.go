@@ -28,7 +28,7 @@ If file is missing or invalid → defaults are used.
 System NEVER crashes.
 */
 func loadConfig() Config {
-	const path = "./logger.json"
+	const path = "./quietlog_config.json"
 
 	// defaults
 	jc := jsonConfig{
@@ -40,7 +40,6 @@ func loadConfig() Config {
 		TimeFmt:    "02-Jan-2006 15:04:05",
 		Color:      true,
 		DebugLevel: false,
-		Quiet:      false,
 	}
 
 	// read file if present
@@ -74,6 +73,5 @@ func loadConfig() Config {
 		Location:   loc,
 		Color:      jc.Color,
 		DebugLevel: jc.DebugLevel,
-		Quiet:      jc.Quiet,
 	}
 }

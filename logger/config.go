@@ -11,5 +11,4 @@ type Config struct {
 	Location   *time.Location
 	Color      bool
 	DebugLevel bool
-	Quiet      bool
 }
