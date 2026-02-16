@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	mu          sync.Mutex
+	once        sync.Once
 	initialized atomic.Bool
 	base        *log.Logger
 	cfg         Config

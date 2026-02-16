@@ -1,15 +1,15 @@
 package logger
 
-import "log"
+import (
+	"log"
+)
 
 func Init(filepath string) {
-	mu.Lock()
-	defer mu.Unlock()
-
-	cfg = LoadConfig(filepath)
-	writer := buildWriter(cfg)
-	base = log.New(writer, "", 0)
-
-	lineCnt.Store(0)
-	initialized.Store(true)
+	once.Do(func() {
+		cfg = LoadConfig(filepath)
+		writer := buildWriter(cfg)
+		base = log.New(writer, "", 0)
+		lineCnt.Store(0)
+		initialized.Store(true)
+	})
 }
