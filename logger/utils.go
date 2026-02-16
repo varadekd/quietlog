@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -28,11 +29,11 @@ If file is missing or invalid → defaults are used.
 
 System NEVER crashes.
 */
-func LoadConfig(filepath string) Config {
-	path := "./quietlog_config.json"
+func LoadConfig(configFile string) Config {
+	path := "quietlog_config.json"
 
-	if filepath != "" {
-		path = filepath
+	if configFile != "" {
+		path = configFile
 	}
 
 	// defaults
@@ -50,16 +51,31 @@ func LoadConfig(filepath string) Config {
 	// read file if present
 	b, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Printf("logger config not found at %s — using defaults: %+v\n", path, jc)
+		fmt.Printf("logger config not found at %s — using defaults\n", path)
 	} else {
 		if err := json.Unmarshal(b, &jc); err != nil {
 			fmt.Printf("logger config invalid JSON at %s — using defaults: %v\n", path, err)
 		}
 	}
 
+	fmt.Printf("Loaded config %+v \n", jc)
+
 	// auto file name if empty
-	if jc.FilePath == "" {
-		jc.FilePath = "./" + jc.AppName + "_" + time.Now().Format("20060102_150405") + ".log"
+
+	filename := jc.AppName + "_" + time.Now().Format("20060102_150405") + ".log"
+
+	switch {
+	case jc.FilePath == "":
+		// default → current directory
+		jc.FilePath = filename
+
+	case filepath.Ext(jc.FilePath) == "":
+		// path is a directory
+		jc.FilePath = filepath.Join(jc.FilePath, filename)
+
+	default:
+		// user provided a file → respect it
+		// do nothing
 	}
 
 	// timezone handling
