@@ -14,6 +14,10 @@ func Debug(msg string) {
 	logger.Log(logger.DebugLevel, msg)
 }
 
+func Warn(msg string) {
+	logger.Log(logger.WarnLevel, msg)
+}
+
 func Error(msg string) {
 	logger.Log(logger.ErrorLevel, msg)
 }
@@ -29,6 +33,10 @@ func Infof(format string, args ...any) {
 
 func Debugf(format string, args ...any) {
 	logger.Logf(logger.DebugLevel, format, args...)
+}
+
+func Warnf(format string, args ...any) {
+	logger.Logf(logger.WarnLevel, format, args...)
 }
 
 func Errorf(format string, args ...any) {

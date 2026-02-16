@@ -12,6 +12,8 @@ func colorize(level Level, value string) string {
 		return color.GreenString(value)
 	case DebugLevel:
 		return color.CyanString(value)
+	case WarnLevel:
+		return color.YellowString(value)
 	case ErrorLevel:
 		return color.RedString(value)
 	case FatalLevel:
