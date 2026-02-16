@@ -39,7 +39,7 @@ func LoadConfig(filepath string) Config {
 	jc := jsonConfig{
 		AppName:    "",
 		FilePath:   "",
-		Timezone:   "Asia/Kolkata",
+		Timezone:   "",
 		MaxLines:   1000,
 		Format:     []string{"AppName", "Level", "Timestamp", "Message"},
 		TimeFmt:    "02-Jan-2006 15:04:05",
@@ -50,10 +50,10 @@ func LoadConfig(filepath string) Config {
 	// read file if present
 	b, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Printf("logger config not found at %s — using defaults", path)
+		fmt.Printf("logger config not found at %s — using defaults: %+v\n", path, jc)
 	} else {
 		if err := json.Unmarshal(b, &jc); err != nil {
-			fmt.Printf("logger config invalid JSON at %s — using defaults: %v", path, err)
+			fmt.Printf("logger config invalid JSON at %s — using defaults: %v\n", path, err)
 		}
 	}
 
