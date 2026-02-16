@@ -27,8 +27,12 @@ If file is missing or invalid → defaults are used.
 
 System NEVER crashes.
 */
-func loadConfig() Config {
-	const path = "./quietlog_config.json"
+func LoadConfig(filepath string) Config {
+	path := "./quietlog_config.json"
+
+	if filepath != "" {
+		path = filepath
+	}
 
 	// defaults
 	jc := jsonConfig{

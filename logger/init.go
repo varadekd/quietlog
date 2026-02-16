@@ -6,7 +6,7 @@ func Init() {
 	mu.Lock()
 	defer mu.Unlock()
 
-	cfg = loadConfig()
+	cfg = LoadConfig("")
 	writer := buildWriter(cfg)
 	base = log.New(writer, "", 0)
 
