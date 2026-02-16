@@ -6,7 +6,7 @@ import (
 )
 
 func TestInternalConcurrentLogging(t *testing.T) {
-	Init()
+	Init("")
 
 	var wg sync.WaitGroup
 	for i := 0; i < 500; i++ {

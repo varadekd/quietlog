@@ -6,7 +6,7 @@ import (
 
 func Log(level Level, msg string) {
 	if !initialized.Load() {
-		Init()
+		Init("")
 	}
 
 	// Terminating the debug logs

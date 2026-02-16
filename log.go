@@ -3,7 +3,7 @@ package quietlog
 import "github.com/varadekd/quietlog/logger"
 
 func Init() {
-	logger.Init()
+	logger.Init("")
 }
 
 func Info(msg string) {

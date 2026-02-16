@@ -2,11 +2,11 @@ package logger
 
 import "log"
 
-func Init() {
+func Init(filepath string) {
 	mu.Lock()
 	defer mu.Unlock()
 
-	cfg = LoadConfig("")
+	cfg = LoadConfig(filepath)
 	writer := buildWriter(cfg)
 	base = log.New(writer, "", 0)
 

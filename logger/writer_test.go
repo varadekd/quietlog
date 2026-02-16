@@ -11,6 +11,6 @@ func TestInvalidLogFilePathDoesNotPanic(t *testing.T) {
 		}
 	}()
 
-	Init()
+	Init("")
 	Log(InfoLevel, "should fallback to stdout")
 }
