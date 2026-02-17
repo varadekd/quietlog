@@ -12,6 +12,7 @@ jsonConfig mirrors the Config structure.
 */
 type jsonConfig struct {
 	AppName     string   `json:"app_name"`
+	FileLogging bool     `json:"file_logging"`
 	FilePath    string   `json:"log_file_path"`
 	MaxSizeInMb float64  `json:"max_file_size_mb"`
 	CleanLogs   bool     `json:"clean_logs"`
@@ -38,6 +39,7 @@ func LoadConfig(configFile string) Config {
 	// defaults
 	jc := jsonConfig{
 		AppName:     "APP",
+		FileLogging: false,
 		FilePath:    "",
 		Timezone:    "UTC",
 		MaxSizeInMb: 10,
@@ -76,6 +78,7 @@ func LoadConfig(configFile string) Config {
 
 	return Config{
 		AppName:     jc.AppName,
+		FileLogging: jc.FileLogging,
 		FilePath:    jc.FilePath,
 		MaxSizeInMb: jc.MaxSizeInMb,
 		CleanLogs:   jc.CleanLogs,
