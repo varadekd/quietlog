@@ -12,16 +12,19 @@ func Log(level Level, msg string) {
 	}
 
 	line := formatLine(level, msg)
+	lineSize := int64(len(line) + 1)
 
-	// Check if rotation needed BEFORE writing
-	lineSize := int64(len(line) + 1) // +1 for newline
+	rotateMu.Lock()
 	maxBytes := int64(cfg.MaxSizeInMb * 1024 * 1024)
-	if currentSize.Load()+lineSize > maxBytes {
-		rotate()
+	if maxBytes <= 0 {
+		maxBytes = 10 * 1024 * 1024 // 10MB safety fallback
 	}
-
+	if currentSize.Load()+lineSize > maxBytes {
+		rotateLocked()
+	}
 	base.Println(line)
 	currentSize.Add(lineSize)
+	rotateMu.Unlock()
 }
 
 func Logf(level Level, format string, args ...any) {
