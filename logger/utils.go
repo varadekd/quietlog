@@ -7,9 +7,7 @@ import (
 	"time"
 )
 
-/*
-jsonConfig mirrors the Config structure.
-*/
+// jsonConfig mirrors the Config structure.
 type jsonConfig struct {
 	AppName     string   `json:"app_name"`
 	FileLogging bool     `json:"file_logging"`
@@ -23,11 +21,8 @@ type jsonConfig struct {
 	DebugLevel  bool     `json:"debug_level"`
 }
 
-/*
-loadConfig reads configuration from logger.json.
-If file is missing or invalid → defaults are used.
-System NEVER crashes.
-*/
+// LoadConfig reads configuration from quietlog_config.json.
+// If file is missing or invalid, defaults are used. System NEVER crashes.
 func LoadConfig(configFile string) Config {
 	path := "./quietlog_config.json"
 
@@ -53,11 +48,11 @@ func LoadConfig(configFile string) Config {
 	b, err := os.ReadFile(path)
 	if err != nil {
 		if configFile != "" {
-			fmt.Printf("quietlog: config not found at %s — using defaults\n", path)
+			fmt.Printf("quietlog: config not found at %s -- using defaults\n", path)
 		}
 	} else {
 		if err := json.Unmarshal(b, &jc); err != nil {
-			fmt.Printf("logger config invalid JSON at %s — using defaults: %v\n", path, err)
+			fmt.Printf("quietlog: invalid JSON at %s -- using defaults: %v\n", path, err)
 		}
 	}
 
@@ -66,13 +61,13 @@ func LoadConfig(configFile string) Config {
 	}
 
 	if !jc.FileLogging && jc.FilePath != "" {
-		fmt.Printf("quietlog: log_file_path is set but file_logging is false — no file will be created\n")
+		fmt.Printf("quietlog: log_file_path is set but file_logging is false -- no file will be created\n")
 	}
 
 	// timezone handling
 	loc, err := time.LoadLocation(jc.Timezone)
 	if err != nil {
-		fmt.Printf("invalid timezone %q — falling back to UTC\n", jc.Timezone)
+		fmt.Printf("quietlog: invalid timezone %q -- falling back to UTC\n", jc.Timezone)
 		loc = time.UTC
 	}
 
