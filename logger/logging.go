@@ -10,10 +10,17 @@ func Log(level Level, msg string) {
 	if level == DebugLevel && !cfg.DebugLevel {
 		return
 	}
-	if lineCnt.Add(1) > cfg.MaxLines {
-		lineCnt.Store(1)
+
+	line := formatLine(level, msg)
+	base.Println(line)
+
+	// track size (approximate)
+	currentSize.Add(int64(len(line) + 1)) // +1 for newline
+
+	// rotate if over threshold
+	if currentSize.Load() > cfg.MaxSizeInMb*1024*1024 {
+		rotate()
 	}
-	base.Println(formatLine(level, msg))
 }
 
 func Logf(level Level, format string, args ...any) {

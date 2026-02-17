@@ -1,6 +1,10 @@
 package quietlog
 
-import "github.com/varadekd/quietlog/logger"
+import (
+	"fmt"
+
+	"github.com/varadekd/quietlog/logger"
+)
 
 func Init() {
 	logger.Init("")
@@ -45,5 +49,5 @@ func Errorf(format string, args ...any) {
 
 func Fatalf(format string, args ...any) {
 	logger.Logf(logger.FatalLevel, format, args...)
-	panic(format)
+	panic(fmt.Sprintf(format, args...))
 }

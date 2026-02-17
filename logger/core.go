@@ -2,6 +2,7 @@ package logger
 
 import (
 	"log"
+	"os"
 	"sync"
 	"sync/atomic"
 )
@@ -17,9 +18,12 @@ const (
 )
 
 var (
-	once        sync.Once
-	initialized atomic.Bool
-	base        *log.Logger
-	cfg         Config
-	lineCnt     atomic.Int64
+	once         sync.Once
+	rotateMu     sync.Mutex
+	base         *log.Logger
+	cfg          Config
+	currentFile  *os.File
+	currentSize  atomic.Int64
+	currentChunk atomic.Int32
+	startTime    string
 )
