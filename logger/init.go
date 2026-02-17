@@ -22,7 +22,7 @@ func Init(filepath string) {
 			}
 		}
 
-		rotate() // always called — sets up stdout at minimum
+		rotateLocked() // called inside once.Do — no other goroutine logging yet
 	})
 }
 
@@ -40,19 +40,16 @@ func cleanOldLogs(dir, appName string) {
 	}
 }
 
-func rotate() {
-	rotateMu.Lock()
-	defer rotateMu.Unlock()
-
+// rotateLocked does the actual rotation work.
+// Caller must already hold rotateMu — OR be inside once.Do (init time).
+func rotateLocked() {
 	if currentFile != nil && currentFile != os.Stdout {
 		currentFile.Close()
 		currentFile = nil
 	}
 
-	// stdout is always the base writer
 	var writer io.Writer = os.Stdout
 
-	// file logging is opt-in
 	if cfg.FileLogging {
 		chunk := currentChunk.Add(1)
 		filename := fmt.Sprintf("%s_%s_chunk%03d.log",

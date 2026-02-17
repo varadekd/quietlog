@@ -62,8 +62,6 @@ func LoadConfig(configFile string) Config {
 		}
 	}
 
-	fmt.Println("FilePath", jc.FilePath)
-
 	// auto file name if empty
 	if jc.FilePath == "" {
 		jc.FilePath = "./" // current directory
