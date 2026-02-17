@@ -22,7 +22,7 @@ func Init(filepath string) {
 			}
 		}
 
-		rotateLocked() // called inside once.Do — no other goroutine logging yet
+		rotateLocked()
 	})
 }
 

@@ -21,7 +21,6 @@ type jsonConfig struct {
 	TimeFmt     string   `json:"log_time_format"`
 	Color       bool     `json:"log_color"`
 	DebugLevel  bool     `json:"debug_level"`
-	Quiet       bool     `json:"quiet"`
 }
 
 /*
@@ -62,9 +61,12 @@ func LoadConfig(configFile string) Config {
 		}
 	}
 
-	// auto file name if empty
-	if jc.FilePath == "" {
-		jc.FilePath = "./" // current directory
+	if jc.FileLogging && jc.FilePath == "" {
+		jc.FilePath = "./"
+	}
+
+	if !jc.FileLogging && jc.FilePath != "" {
+		fmt.Printf("quietlog: log_file_path is set but file_logging is false — no file will be created\n")
 	}
 
 	// timezone handling
