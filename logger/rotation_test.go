@@ -12,16 +12,15 @@ func TestChunkNaming(t *testing.T) {
 
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
-
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "myapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`",
 		"max_file_size_mb": 0.001
 	}`), 0644)
 
 	Init(configPath)
 
-	// Write enough to create multiple chunks
 	for i := 0; i < 100; i++ {
 		Log(InfoLevel, "log message to trigger chunk rotation")
 	}
@@ -34,7 +33,10 @@ func TestChunkNaming(t *testing.T) {
 		}
 	}
 
-	// Verify chunk naming format
+	if len(chunks) == 0 {
+		t.Fatal("no chunk files created")
+	}
+
 	for _, chunk := range chunks {
 		if !strings.HasPrefix(chunk, "myapp_") {
 			t.Errorf("chunk name doesn't start with app name: %s", chunk)
@@ -53,9 +55,9 @@ func TestRotationPreservesAllLogs(t *testing.T) {
 
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
-
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`",
 		"max_file_size_mb": 0.001
 	}`), 0644)
@@ -67,7 +69,6 @@ func TestRotationPreservesAllLogs(t *testing.T) {
 		Log(InfoLevel, "message number")
 	}
 
-	// Count total log lines across all chunks
 	entries, _ := os.ReadDir(tmpDir)
 	totalLines := 0
 	for _, e := range entries {

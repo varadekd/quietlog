@@ -17,6 +17,7 @@ func TestConcurrentPublicLogging(t *testing.T) {
 	currentConfig := "quietlog_config.json"
 	os.WriteFile(currentConfig, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`"
 	}`), 0644)
 	defer os.Remove(currentConfig)
@@ -59,6 +60,7 @@ func TestFormattedLogging(t *testing.T) {
 	currentConfig := "quietlog_config.json"
 	os.WriteFile(currentConfig, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`"
 	}`), 0644)
 	defer os.Remove(currentConfig)

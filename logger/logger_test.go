@@ -12,11 +12,10 @@ func TestInternalConcurrentLogging(t *testing.T) {
 	ResetForTesting()
 
 	tmpDir := t.TempDir()
-
-	// Write config file
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`",
 		"max_file_size_mb": 10,
 		"clean_logs": false
@@ -34,7 +33,6 @@ func TestInternalConcurrentLogging(t *testing.T) {
 	}
 	wg.Wait()
 
-	// Verify logs were written
 	entries, err := os.ReadDir(tmpDir)
 	if err != nil {
 		t.Fatalf("failed to read log dir: %v", err)
@@ -56,10 +54,9 @@ func TestInvalidLogFilePathDoesNotPanic(t *testing.T) {
 
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
-
-	// Config with invalid path
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "/invalid/path/nowhere",
 		"max_file_size_mb": 10
 	}`), 0644)
@@ -79,10 +76,9 @@ func TestDebugLevelToggle(t *testing.T) {
 
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
-
-	// Debug disabled
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`",
 		"debug_level": false
 	}`), 0644)
@@ -91,7 +87,6 @@ func TestDebugLevelToggle(t *testing.T) {
 	Log(DebugLevel, "debug message")
 	Log(InfoLevel, "info message")
 
-	// Read log file
 	entries, _ := os.ReadDir(tmpDir)
 	var logFile string
 	for _, e := range entries {
@@ -99,6 +94,9 @@ func TestDebugLevelToggle(t *testing.T) {
 			logFile = filepath.Join(tmpDir, e.Name())
 			break
 		}
+	}
+	if logFile == "" {
+		t.Fatal("no log file found in tmpDir")
 	}
 
 	content, _ := os.ReadFile(logFile)
@@ -117,22 +115,19 @@ func TestFileRotation(t *testing.T) {
 
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
-
-	// Very small file size to trigger rotation - 0.0005 MB = ~512 bytes
 	os.WriteFile(configPath, []byte(`{
-			"app_name": "testapp",
-			"log_file_path": "`+tmpDir+`",
-			"max_file_size_mb": 0.0005
-		}`), 0644)
+		"app_name": "testapp",
+		"file_logging": true,
+		"log_file_path": "`+tmpDir+`",
+		"max_file_size_mb": 0.0005
+	}`), 0644)
 
 	Init(configPath)
 
-	// Write enough logs to trigger rotation - each line is ~80 bytes
 	for i := 0; i < 200; i++ {
 		Log(InfoLevel, "this is a log message that will trigger rotation when accumulated")
 	}
 
-	// Check for multiple chunk files
 	entries, err := os.ReadDir(tmpDir)
 	if err != nil {
 		t.Fatalf("failed to read log dir: %v", err)
@@ -154,14 +149,13 @@ func TestCleanLogsFlag(t *testing.T) {
 	ResetForTesting()
 
 	tmpDir := t.TempDir()
-
-	// Create some old log files
 	os.WriteFile(filepath.Join(tmpDir, "testapp_20240101_120000_chunk001.log"), []byte("old"), 0644)
 	os.WriteFile(filepath.Join(tmpDir, "testapp_20240101_120000_chunk002.log"), []byte("old"), 0644)
 
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`",
 		"clean_logs": true
 	}`), 0644)
@@ -169,7 +163,6 @@ func TestCleanLogsFlag(t *testing.T) {
 	Init(configPath)
 	Log(InfoLevel, "new log")
 
-	// Old files should be gone
 	entries, _ := os.ReadDir(tmpDir)
 	for _, e := range entries {
 		if strings.HasPrefix(e.Name(), "testapp_20240101") {
@@ -183,9 +176,9 @@ func TestInvalidTimezone(t *testing.T) {
 
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
-
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "testapp",
+		"file_logging": true,
 		"log_file_path": "`+tmpDir+`",
 		"log_timezone": "Invalid/Timezone"
 	}`), 0644)
@@ -205,8 +198,6 @@ func TestInvalidJSON(t *testing.T) {
 
 	tmpDir := t.TempDir()
 	configPath := filepath.Join(tmpDir, "quietlog_config.json")
-
-	// Malformed JSON
 	os.WriteFile(configPath, []byte(`{
 		"app_name": "testapp"
 		"log_file_path": "`+tmpDir+`"
