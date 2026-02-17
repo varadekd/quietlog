@@ -8,8 +8,6 @@ import (
 )
 
 func buildWriter(cfg Config) io.Writer {
-	fmt.Println("Got it", cfg.FilePath)
-
 	// Ensure directory exists
 	dir := filepath.Dir(cfg.FilePath)
 	if err := os.MkdirAll(dir, 0755); err != nil {
