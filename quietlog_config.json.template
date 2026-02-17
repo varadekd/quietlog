@@ -1,0 +1,12 @@
+{
+  "app_name": "myapp",
+  "debug_level": false,
+  "log_color": false,
+  "file_logging": false,
+  "log_file_path": "./logs",
+  "max_file_size_mb": 10,
+  "clean_logs": false,
+  "log_format": ["AppName", "Level", "Message", "Timestamp"],
+  "log_time_format": "02-Jan-2006 15:04:05 MST",
+  "log_timezone": "UTC"
+}
