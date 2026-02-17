@@ -10,6 +10,11 @@ func Init() {
 	logger.Init("")
 }
 
+// For custom PATH
+func Config(path string) {
+	logger.Init(path)
+}
+
 func Info(msg string) {
 	logger.Log(logger.InfoLevel, msg)
 }
