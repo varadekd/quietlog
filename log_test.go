@@ -99,4 +99,8 @@ func TestFormattedLogging(t *testing.T) {
 			t.Errorf("log file missing formatted message: %q", want)
 		}
 	}
+
+	if strings.Contains(logs, "cache hit rate") {
+		t.Error("debug message appeared when debug_level was not enabled")
+	}
 }
