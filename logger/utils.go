@@ -38,11 +38,11 @@ func LoadConfig(configFile string) Config {
 
 	// defaults
 	jc := jsonConfig{
-		AppName:    "",
+		AppName:    "APP",
 		FilePath:   "",
 		Timezone:   "",
 		MaxLines:   1000,
-		Format:     []string{"AppName", "Level", "Timestamp", "Message"},
+		Format:     []string{"AppName", "Level", "Message", "Timestamp"},
 		TimeFmt:    "02-Jan-2006 15:04:05 MST",
 		Color:      true,
 		DebugLevel: false,
