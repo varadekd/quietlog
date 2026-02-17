@@ -12,14 +12,14 @@ func Init(filepath string) {
 	once.Do(func() {
 		cfg = LoadConfig(filepath)
 
-		// clean old logs if enabled
+		// set shared timestamp for all chunks FIRST
+		startTime = time.Now().Format("20060102_150405")
+		currentChunk.Store(0)
+
+		// THEN clean old logs if enabled (after startTime is set)
 		if cfg.CleanLogs {
 			cleanOldLogs(cfg.FilePath, cfg.AppName)
 		}
-
-		// set shared timestamp for all chunks
-		startTime = time.Now().Format("20060102_150405")
-		currentChunk.Store(0)
 
 		rotate() // open first chunk
 	})
@@ -44,11 +44,11 @@ func rotate() {
 	defer rotateMu.Unlock()
 
 	// close old file
-	if currentFile != nil {
+	if currentFile != nil && currentFile != os.Stdout {
 		currentFile.Close()
 	}
 
-	// open new chunk
+	// increment chunk
 	chunk := currentChunk.Add(1)
 	filename := fmt.Sprintf("%s_%s_chunk%03d.log",
 		cfg.AppName, startTime, chunk)
@@ -58,7 +58,6 @@ func rotate() {
 	f, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "quietlog: failed to open log file %s: %v\n", logPath, err)
-		// fallback to stdout
 		f = os.Stdout
 	}
 

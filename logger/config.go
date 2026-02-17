@@ -5,7 +5,7 @@ import "time"
 type Config struct {
 	AppName     string
 	FilePath    string
-	MaxSizeInMb int64
+	MaxSizeInMb float64
 	CleanLogs   bool
 	Format      []string
 	TimeFmt     string

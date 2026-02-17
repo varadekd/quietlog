@@ -13,7 +13,7 @@ jsonConfig mirrors the Config structure.
 type jsonConfig struct {
 	AppName     string   `json:"app_name"`
 	FilePath    string   `json:"log_file_path"`
-	MaxSizeInMb int64    `json:"max_file_size_mb"`
+	MaxSizeInMb float64  `json:"max_file_size_mb"`
 	CleanLogs   bool     `json:"clean_logs"`
 	Timezone    string   `json:"log_timezone"`
 	Format      []string `json:"log_format"`
@@ -29,7 +29,7 @@ If file is missing or invalid → defaults are used.
 System NEVER crashes.
 */
 func LoadConfig(configFile string) Config {
-	path := "quietlog_config.json"
+	path := "./quietlog_config.json"
 
 	if configFile != "" {
 		path = configFile
@@ -60,9 +60,11 @@ func LoadConfig(configFile string) Config {
 		}
 	}
 
+	fmt.Println("FilePath", jc.FilePath)
+
 	// auto file name if empty
 	if jc.FilePath == "" {
-		jc.FilePath = "." // current directory
+		jc.FilePath = "./" // current directory
 	}
 
 	// timezone handling

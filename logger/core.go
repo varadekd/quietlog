@@ -27,3 +27,20 @@ var (
 	currentChunk atomic.Int32
 	startTime    string
 )
+
+// ResetForTesting resets the logger state - ONLY for tests
+func ResetForTesting() {
+	rotateMu.Lock()
+	defer rotateMu.Unlock()
+
+	if currentFile != nil && currentFile != os.Stdout {
+		currentFile.Close()
+	}
+
+	once = sync.Once{}
+	currentFile = nil
+	currentSize.Store(0)
+	currentChunk.Store(0)
+	startTime = ""
+	base = nil
+}
