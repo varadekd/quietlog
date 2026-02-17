@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func formatLine(level Level, msg string) string {
+func formatLine(level Level, msg string, withColor bool) string {
 	loc := cfg.Location
 	if loc == nil {
 		loc = time.UTC
@@ -47,7 +47,7 @@ func formatLine(level Level, msg string) string {
 			if written > 0 {
 				b.WriteString(" ")
 			}
-			if f == "Level" {
+			if f == "Level" && withColor {
 				v = colorize(level, v)
 			}
 			b.WriteString("[")
