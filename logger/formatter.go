@@ -6,7 +6,16 @@ import (
 )
 
 func formatLine(level Level, msg string) string {
-	now := time.Now().In(cfg.Location).Format(cfg.TimeFmt)
+	loc := cfg.Location
+	if loc == nil {
+		loc = time.UTC
+	}
+	timeFmt := cfg.TimeFmt
+	if timeFmt == "" {
+		timeFmt = "02-Jan-2006 15:04:05 MST"
+	}
+
+	now := time.Now().In(loc).Format(timeFmt)
 
 	fields := map[string]string{
 		"AppName":   cfg.AppName,
@@ -33,7 +42,7 @@ func formatLine(level Level, msg string) string {
 			written++
 		} else {
 			if v == "" {
-				continue // skip empty fields entirely
+				continue
 			}
 			if written > 0 {
 				b.WriteString(" ")
