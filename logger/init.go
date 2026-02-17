@@ -56,12 +56,17 @@ func rotateLocked() {
 			cfg.AppName, startTime, chunk)
 		logPath := filepath.Join(cfg.FilePath, filename)
 
-		f, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "quietlog: failed to open log file %s: %v\n", logPath, err)
+		// create directory if it doesn't exist
+		if err := os.MkdirAll(cfg.FilePath, 0755); err != nil {
+			fmt.Fprintf(os.Stderr, "quietlog: failed to create log directory %s: %v\n", cfg.FilePath, err)
 		} else {
-			currentFile = f
-			writer = io.MultiWriter(os.Stdout, f)
+			f, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "quietlog: failed to open log file %s: %v\n", logPath, err)
+			} else {
+				currentFile = f
+				writer = io.MultiWriter(os.Stdout, f)
+			}
 		}
 	}
 
