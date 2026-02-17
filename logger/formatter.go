@@ -16,28 +16,35 @@ func formatLine(level Level, msg string) string {
 	}
 
 	var b strings.Builder
+	written := 0
 
-	for i, f := range cfg.Format {
-		if v, ok := fields[f]; ok {
-			if i > 0 {
+	for _, f := range cfg.Format {
+		v, ok := fields[f]
+		if !ok {
+			continue
+		}
+
+		if f == "Message" {
+			if written > 0 {
 				b.WriteString(" ")
 			}
-
-			// Apply color ONLY to Level (and optionally AppName)
+			b.WriteString(": ")
+			b.WriteString(v)
+			written++
+		} else {
+			if v == "" {
+				continue // skip empty fields entirely
+			}
+			if written > 0 {
+				b.WriteString(" ")
+			}
 			if f == "Level" {
 				v = colorize(level, v)
 			}
-
-			if f == "Message" {
-				b.WriteString(": ")
-				b.WriteString(v)
-			} else {
-				if v != "" {
-					b.WriteString("[")
-					b.WriteString(v)
-					b.WriteString("]")
-				}
-			}
+			b.WriteString("[")
+			b.WriteString(v)
+			b.WriteString("]")
+			written++
 		}
 	}
 
