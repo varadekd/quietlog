@@ -41,7 +41,7 @@ func cleanOldLogs(dir, appName string) {
 }
 
 // rotateLocked does the actual rotation work.
-// Caller must already hold rotateMu — OR be inside once.Do (init time).
+// Caller must already hold rotateMu -- OR be inside once.Do (init time).
 func rotateLocked() {
 	if currentFile != nil && currentFile != os.Stdout {
 		currentFile.Close()
@@ -59,7 +59,6 @@ func rotateLocked() {
 		f, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "quietlog: failed to open log file %s: %v\n", logPath, err)
-			// stdout still works, just no file
 		} else {
 			currentFile = f
 			writer = io.MultiWriter(os.Stdout, f)
